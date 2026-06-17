@@ -1,0 +1,18 @@
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.grid--auto {
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min-width), 1fr));
+}
+
+.grid--fixed {
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+}
+
+@media (max-width: 767px) {
+  .grid--fixed {
+    grid-template-columns: 1fr;
+  }
+}

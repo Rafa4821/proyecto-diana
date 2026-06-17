@@ -1,0 +1,68 @@
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+.about__photo {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.about__content-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.about__name {
+  margin-bottom: 0;
+}
+
+.about__statement {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-style: italic;
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  padding-left: var(--space-lg);
+  border-left: 2px solid var(--color-border);
+  margin: 0;
+}
+
+.about__bio p {
+  color: var(--color-gray-600);
+  line-height: var(--leading-relaxed);
+}
+
+.about__links {
+  padding-top: var(--space-md);
+}
+
+.about__instagram {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2xs);
+  transition: border-color var(--transition-fast);
+}
+
+.about__instagram:hover {
+  border-color: var(--color-text);
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .about__grid {
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-4xl);
+    align-items: start;
+  }
+
+  .about__statement {
+    font-size: var(--text-xl);
+  }
+}

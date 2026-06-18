@@ -1,6 +1,7 @@
 .grid {
   display: grid;
   gap: var(--grid-gap);
+  grid-template-columns: repeat(var(--grid-columns-mobile, 1), 1fr);
 }
 
 .grid--auto {
@@ -8,11 +9,17 @@
 }
 
 .grid--fixed {
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  grid-template-columns: repeat(var(--grid-columns-mobile, 1), 1fr);
 }
 
-@media (max-width: 767px) {
-  .grid--fixed {
-    grid-template-columns: 1fr;
+@media (min-width: 768px) {
+  .grid:not(.grid--auto) {
+    grid-template-columns: repeat(var(--grid-columns-tablet, 2), 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid:not(.grid--auto) {
+    grid-template-columns: repeat(var(--grid-columns-desktop, 4), 1fr);
   }
 }

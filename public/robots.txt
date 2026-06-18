@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block admin routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /carrito
+Disallow: /checkout
+Disallow: /pedido-recibido/
+
+# Sitemap
+Sitemap: https://www.dianamorales.cl/sitemap.xml

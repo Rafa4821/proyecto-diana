@@ -1,7 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import PublicLayout from '@/shared/layout/PublicLayout';
 import AdminLayout from '@/shared/layout/AdminLayout';
+import AdminProtectedRoute from '@/features/auth/AdminProtectedRoute';
 
 import HomePage from '@/features/home/HomePage';
 import AboutPage from '@/features/about/AboutPage';
@@ -9,20 +11,29 @@ import ArtworksPage from '@/features/artworks/ArtworksPage';
 import ShopPage from '@/features/shop/ShopPage';
 import ProductDetailPage from '@/features/products/ProductDetailPage';
 import CartPage from '@/features/cart/CartPage';
-import CheckoutPage from '@/features/checkout/CheckoutPage';
-import OrderConfirmationPage from '@/features/orders/OrderConfirmationPage';
 import ContactPage from '@/features/contact/ContactPage';
 import PoliciesPage from '@/features/policies/PoliciesPage';
+import PolicyDetailPage from '@/features/policies/PolicyDetailPage';
 
-import LoginPage from '@/features/auth/LoginPage';
-import DashboardPage from '@/features/admin/DashboardPage';
-import AdminProductsPage from '@/features/admin/AdminProductsPage';
-import AdminArtworksPage from '@/features/admin/AdminArtworksPage';
-import AdminOrdersPage from '@/features/admin/AdminOrdersPage';
-import MediaPage from '@/features/media-library/MediaPage';
-import SiteSettingsPage from '@/features/site-settings/SiteSettingsPage';
-import AdminContentPage from '@/features/admin/AdminContentPage';
-import AdminPoliciesPage from '@/features/admin/AdminPoliciesPage';
+const CheckoutPage = lazy(() => import('@/features/checkout/CheckoutPage'));
+const OrderConfirmationPage = lazy(() => import('@/features/orders/OrderConfirmationPage'));
+const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
+const DashboardPage = lazy(() => import('@/features/admin/DashboardPage'));
+const AdminProductsPage = lazy(() => import('@/features/admin/AdminProductsPage'));
+const AdminArtworksPage = lazy(() => import('@/features/admin/AdminArtworksPage'));
+const AdminOrdersPage = lazy(() => import('@/features/admin/AdminOrdersPage'));
+const MediaPage = lazy(() => import('@/features/media-library/MediaPage'));
+const SiteSettingsPage = lazy(() => import('@/features/site-settings/SiteSettingsPage'));
+const AdminContentPage = lazy(() => import('@/features/admin/AdminContentPage'));
+const AdminPoliciesPage = lazy(() => import('@/features/admin/AdminPoliciesPage'));
+
+function LazyFallback() {
+  return <div style={{ textAlign: 'center', padding: '3rem 0', color: '#737373', fontSize: '0.875rem' }}>Cargando...</div>;
+}
+
+function SuspenseWrap({ children }) {
+  return <Suspense fallback={<LazyFallback />}>{children}</Suspense>;
+}
 
 export const router = createBrowserRouter([
   {
@@ -34,28 +45,34 @@ export const router = createBrowserRouter([
       { path: '/shop', element: <ShopPage /> },
       { path: '/shop/:slug', element: <ProductDetailPage /> },
       { path: '/carrito', element: <CartPage /> },
-      { path: '/checkout', element: <CheckoutPage /> },
-      { path: '/pedido-recibido/:orderId', element: <OrderConfirmationPage /> },
+      { path: '/checkout', element: <SuspenseWrap><CheckoutPage /></SuspenseWrap> },
+      { path: '/pedido-recibido/:orderId', element: <SuspenseWrap><OrderConfirmationPage /></SuspenseWrap> },
       { path: '/contacto', element: <ContactPage /> },
       { path: '/politicas', element: <PoliciesPage /> },
+      { path: '/politicas/:slug', element: <PolicyDetailPage /> },
     ],
   },
   {
     path: '/admin/login',
-    element: <LoginPage />,
+    element: <SuspenseWrap><LoginPage /></SuspenseWrap>,
   },
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: <AdminProtectedRoute />,
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'productos', element: <AdminProductsPage /> },
-      { path: 'ilustraciones', element: <AdminArtworksPage /> },
-      { path: 'pedidos', element: <AdminOrdersPage /> },
-      { path: 'media', element: <MediaPage /> },
-      { path: 'configuracion', element: <SiteSettingsPage /> },
-      { path: 'contenido', element: <AdminContentPage /> },
-      { path: 'politicas', element: <AdminPoliciesPage /> },
+      {
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <SuspenseWrap><DashboardPage /></SuspenseWrap> },
+          { path: 'productos', element: <SuspenseWrap><AdminProductsPage /></SuspenseWrap> },
+          { path: 'ilustraciones', element: <SuspenseWrap><AdminArtworksPage /></SuspenseWrap> },
+          { path: 'pedidos', element: <SuspenseWrap><AdminOrdersPage /></SuspenseWrap> },
+          { path: 'media', element: <SuspenseWrap><MediaPage /></SuspenseWrap> },
+          { path: 'configuracion', element: <SuspenseWrap><SiteSettingsPage /></SuspenseWrap> },
+          { path: 'contenido', element: <SuspenseWrap><AdminContentPage /></SuspenseWrap> },
+          { path: 'politicas', element: <SuspenseWrap><AdminPoliciesPage /></SuspenseWrap> },
+        ],
+      },
     ],
   },
 ]);

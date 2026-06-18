@@ -1,2 +1,4 @@
-// Firebase Auth helpers
-// Will be configured in a later phase
+import { getAuth } from 'firebase/auth';
+import { app } from './client';
+
+export const auth = getAuth(app);

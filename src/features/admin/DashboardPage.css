@@ -1,0 +1,268 @@
+.dashboard h1 {
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard__loading {
+  color: var(--color-text-muted);
+  padding: var(--space-4xl) 0;
+  text-align: center;
+}
+
+.dashboard__error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-sm);
+}
+
+/* Stat cards */
+.dashboard__cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+@media (max-width: 1023px) {
+  .dashboard__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  border-left: 4px solid transparent;
+}
+
+.stat-card__value {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.stat-card__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.stat-card--gray    { border-left-color: #6b7280; }
+.stat-card--yellow  { border-left-color: #f59e0b; }
+.stat-card--blue    { border-left-color: #3b82f6; }
+.stat-card--green   { border-left-color: #10b981; }
+.stat-card--teal    { border-left-color: #14b8a6; }
+.stat-card--orange  { border-left-color: #f97316; }
+.stat-card--purple  { border-left-color: #8b5cf6; }
+.stat-card--indigo  { border-left-color: #6366f1; }
+
+/* Alerts */
+.dashboard__alerts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard__alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-sm);
+}
+
+.dashboard__alert strong {
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.dashboard__alert ul {
+  padding-left: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard__alert a {
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+}
+
+.dashboard__alert--warning {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.dashboard__alert--danger {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+/* Grid */
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+@media (max-width: 1023px) {
+  .dashboard__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sections */
+.dashboard__section {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.dashboard__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.dashboard__section-header h2 {
+  font-size: var(--text-base);
+  margin: 0;
+}
+
+.dashboard__view-all {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.dashboard__view-all:hover {
+  color: var(--color-text);
+}
+
+.dashboard__empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+/* Table */
+.dashboard__table-wrap {
+  overflow-x: auto;
+}
+
+.dashboard__table {
+  width: 100%;
+  font-size: var(--text-sm);
+  border-collapse: collapse;
+}
+
+.dashboard__table th {
+  text-align: left;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  padding: var(--space-sm) var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.dashboard__table td {
+  padding: var(--space-sm) var(--space-sm);
+  border-bottom: 1px solid var(--color-border-light);
+  white-space: nowrap;
+}
+
+.dashboard__table a {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.dashboard__table a:hover {
+  text-decoration: underline;
+}
+
+.dashboard__date {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Desktop table visible, mobile cards hidden */
+.dashboard__table-wrap {
+  display: block;
+}
+
+.dashboard__mobile-cards {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .dashboard__table-wrap {
+    display: none;
+  }
+
+  .dashboard__mobile-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}
+
+/* Mobile card */
+.dashboard__mobile-card {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.dashboard__mobile-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+/* Badges */
+.dashboard__badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.dashboard__badge--pending_transfer { background: #fffbeb; color: #92400e; }
+.dashboard__badge--proof_uploaded   { background: #eff6ff; color: #1e40af; }
+.dashboard__badge--confirmed        { background: #ecfdf5; color: #065f46; }
+.dashboard__badge--rejected         { background: #fef2f2; color: #991b1b; }
+
+.dashboard__badge--product-published { background: #ecfdf5; color: #065f46; }
+.dashboard__badge--product-draft     { background: #f3f4f6; color: #6b7280; }
+.dashboard__badge--product-reserved  { background: #fffbeb; color: #92400e; }
+.dashboard__badge--product-sold      { background: #eff6ff; color: #1e40af; }
+.dashboard__badge--product-archived  { background: #f3f4f6; color: #9ca3af; }

@@ -8,14 +8,16 @@ export default function Card({ children, className = '', ...props }) {
   );
 }
 
-function CardImage({ src, alt, aspectRatio = '4/5' }) {
+function CardImage({ src, alt, aspectRatio }) {
+  const style = aspectRatio ? { aspectRatio } : {};
   return (
-    <div className="card__image-wrapper" style={{ aspectRatio }}>
+    <div className="card__image-wrapper" style={style}>
       <img
         className="card__image"
         src={src}
         alt={alt}
         loading="lazy"
+        decoding="async"
       />
     </div>
   );

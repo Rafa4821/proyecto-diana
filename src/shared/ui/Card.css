@@ -13,6 +13,7 @@
   position: relative;
   overflow: hidden;
   background-color: var(--color-gray-100);
+  aspect-ratio: var(--card-ratio, 4/5);
 }
 
 .card__image {

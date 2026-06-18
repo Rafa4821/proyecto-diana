@@ -65,6 +65,25 @@
   min-height: 120px;
 }
 
+.contact__custom-orders {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.contact__custom-orders h3 {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-sm);
+}
+
+.contact__custom-orders p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
 @media (min-width: 768px) {
   .contact__grid {
     grid-template-columns: 1fr 1.4fr;

@@ -157,3 +157,21 @@
     align-self: flex-start;
   }
 }
+
+.product-detail__loading {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-4xl) 0;
+  font-size: var(--text-sm);
+}
+
+.product-detail__error {
+  color: #991b1b;
+  margin-bottom: var(--space-lg);
+}
+
+.product-detail__added-msg {
+  font-size: var(--text-sm);
+  color: #065f46;
+  margin-top: var(--space-sm);
+}

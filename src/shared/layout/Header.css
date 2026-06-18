@@ -31,6 +31,18 @@
   opacity: 1;
 }
 
+.header__logo-img {
+  height: var(--logo-size-mobile, 80px);
+  width: auto;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .header__logo-img {
+    height: var(--logo-size-desktop, 120px);
+  }
+}
+
 /* Desktop nav */
 .header__nav--desktop {
   display: none;
@@ -84,6 +96,7 @@
 }
 
 .header__cart {
+  position: relative;
   display: flex;
   align-items: center;
   color: var(--color-text);
@@ -92,6 +105,24 @@
 
 .header__cart:hover {
   opacity: 0.6;
+}
+
+.header__cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-radius: 50%;
+  padding: 0 4px;
+  line-height: 1;
 }
 
 /* Hamburger */

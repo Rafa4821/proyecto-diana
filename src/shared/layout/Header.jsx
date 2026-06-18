@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useSiteSettings } from '@/app/providers/SiteSettingsContext';
+import { useCart } from '@/features/cart/CartContext';
 import './Header.css';
 
 const navLinks = [
@@ -12,16 +14,31 @@ const navLinks = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const { settings } = useSiteSettings();
+  const { totalItems } = useCart();
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
+
+  const logoStyle = {
+    '--logo-size-desktop': `${settings.logoSizeDesktop || 120}px`,
+    '--logo-size-mobile': `${settings.logoSizeMobile || 80}px`,
+  };
 
   return (
     <>
       <header className="header">
         <div className="container header__inner">
-          <Link to="/" className="header__logo" onClick={closeMenu}>
-            Diana
+          <Link to="/" className="header__logo" onClick={closeMenu} style={logoStyle}>
+            {settings.useLogo && settings.logoUrl ? (
+              <img
+                className="header__logo-img"
+                src={settings.logoUrl}
+                alt={settings.artistName}
+              />
+            ) : (
+              settings.artistName || 'Diana'
+            )}
           </Link>
 
           <nav className="header__nav header__nav--desktop">
@@ -45,6 +62,7 @@ export default function Header() {
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
+              {totalItems > 0 && <span className="header__cart-badge">{totalItems}</span>}
             </Link>
 
             <button

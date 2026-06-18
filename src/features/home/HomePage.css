@@ -53,6 +53,21 @@
   border-radius: var(--radius-md);
 }
 
+@media (max-width: 767px) {
+  .hero-image__img {
+    aspect-ratio: 16/9;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+}
+
 /* Section header */
 .section-header {
   display: flex;

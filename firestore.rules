@@ -1,0 +1,136 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper functions ───────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
+    }
+
+    function isValidString(field) {
+      return field is string && field.size() > 0;
+    }
+
+    // ─── siteSettings ───────────────────────────────────────
+    // Public read, admin write
+    match /siteSettings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── pages ──────────────────────────────────────────────
+    // Public read, admin write
+    match /pages/{pageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── products ───────────────────────────────────────────
+    // Public can read published products only
+    // Admin full CRUD
+    match /products/{productId} {
+      allow read: if resource.data.status == 'published'
+                  || resource.data.status == 'reserved'
+                  || resource.data.status == 'sold'
+                  || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─── artworks ───────────────────────────────────────────
+    // Public can read published artworks
+    // Admin full CRUD
+    match /artworks/{artworkId} {
+      allow read: if resource.data.status == 'published'
+                  || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─── categories ─────────────────────────────────────────
+    // Public read, admin write
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── orders ─────────────────────────────────────────────
+    // Public can create with controlled fields
+    // Public can read their own order by document ID (for order confirmation page)
+    // Public can update ONLY paymentProof-related fields on their own order
+    // Admin full read/write
+    match /orders/{orderId} {
+      // Admin can read all orders
+      // Non-authenticated users cannot list orders, but can get by ID
+      allow get: if true;
+      allow list: if isAdmin();
+
+      // Public can create orders with controlled fields
+      allow create: if orderCreateIsValid();
+
+      // Admin can update anything
+      // Public can only attach payment proof
+      allow update: if isAdmin()
+                    || proofUploadIsValid();
+
+      allow delete: if isAdmin();
+    }
+
+    function orderCreateIsValid() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+               'orderNumber', 'customer', 'shipping', 'items',
+               'productIds', 'subtotal', 'shippingCost', 'total',
+               'paymentMethod', 'paymentStatus', 'orderStatus',
+               'createdAt', 'updatedAt'
+             ])
+          && data.customer is map
+          && isValidString(data.customer.name)
+          && isValidString(data.customer.email)
+          && data.items is list
+          && data.items.size() > 0
+          && data.items.size() <= 20
+          && data.subtotal is number
+          && data.total is number
+          && data.total > 0
+          && data.paymentStatus == 'pending_transfer'
+          && data.orderStatus == 'waiting_payment'
+          // Block injection of admin-only fields
+          && !data.keys().hasAny(['adminNotes', 'isAdmin', 'role']);
+    }
+
+    function proofUploadIsValid() {
+      let data = request.resource.data;
+      let diff = data.diff(resource.data).affectedKeys();
+      // Only these fields may change
+      return diff.hasOnly(['transferProofUrl', 'paymentStatus', 'orderStatus', 'updatedAt'])
+          && data.transferProofUrl is string
+          && data.transferProofUrl.size() > 0
+          && data.paymentStatus == 'proof_uploaded'
+          && data.orderStatus == 'under_review';
+    }
+
+    // ─── media ──────────────────────────────────────────────
+    // Admin only
+    match /media/{mediaId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─── adminUsers ─────────────────────────────────────────
+    // Only admin can read/write
+    match /adminUsers/{userId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ─── Deny everything else ───────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

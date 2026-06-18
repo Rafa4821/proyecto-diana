@@ -36,6 +36,12 @@
   margin-bottom: 0;
 }
 
+.footer__email {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+
 .footer__nav {
   display: flex;
   flex-direction: column;
@@ -65,10 +71,25 @@
 .footer__bottom {
   padding-top: var(--space-xl);
   border-top: var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .footer__bottom small {
   color: var(--color-text-light);
+}
+
+.footer__admin-link {
+  font-size: var(--text-sm);
+  color: var(--color-text-light);
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
+  text-decoration: none;
+}
+
+.footer__admin-link:hover {
+  opacity: 1;
 }
 
 @media (min-width: 768px) {

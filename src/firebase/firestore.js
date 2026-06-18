@@ -1,2 +1,4 @@
-// Firestore helpers
-// Will be configured in a later phase
+import { getFirestore } from 'firebase/firestore';
+import { app } from './client';
+
+export const db = getFirestore(app);

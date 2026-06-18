@@ -12,6 +12,7 @@ const adminLinks = [
   { to: '/admin/contenido', label: 'Contenido' },
   { to: '/admin/configuracion', label: 'Configuración' },
   { to: '/admin/politicas', label: 'Políticas' },
+  { to: '/admin/usuarios', label: 'Usuarios' },
 ];
 
 export default function AdminLayout() {

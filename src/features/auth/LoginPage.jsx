@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import './LoginPage.css';
 
@@ -44,9 +44,16 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+      <Link to="/" className="login-page__back" aria-label="Volver al sitio">
+        ← Volver al sitio
+      </Link>
+
       <div className="login-card">
-        <h1 className="login-card__title">Panel Admin</h1>
-        <p className="login-card__subtitle">Inicia sesión para continuar</p>
+        <div className="login-card__brand">
+          <span className="login-card__icon">✦</span>
+          <h1 className="login-card__title">Estudio Creativo</h1>
+          <p className="login-card__subtitle">Accede a tu panel de administración</p>
+        </div>
 
         {error && <div className="login-card__error">{error}</div>}
 
@@ -58,7 +65,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@ejemplo.com"
+              placeholder="tu@email.com"
               autoComplete="email"
             />
           </div>
@@ -77,6 +84,10 @@ export default function LoginPage() {
             {loading ? 'Ingresando...' : 'Iniciar sesión'}
           </button>
         </form>
+
+        <div className="login-card__footer">
+          <p>¿Primera vez aquí? <Link to="/admin/registro" className="login-card__link">Crear cuenta</Link></p>
+        </div>
       </div>
     </div>
   );

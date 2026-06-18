@@ -18,6 +18,7 @@ import PolicyDetailPage from '@/features/policies/PolicyDetailPage';
 const CheckoutPage = lazy(() => import('@/features/checkout/CheckoutPage'));
 const OrderConfirmationPage = lazy(() => import('@/features/orders/OrderConfirmationPage'));
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
+const RegisterPage = lazy(() => import('@/features/auth/RegisterPage'));
 const DashboardPage = lazy(() => import('@/features/admin/DashboardPage'));
 const AdminProductsPage = lazy(() => import('@/features/admin/AdminProductsPage'));
 const AdminArtworksPage = lazy(() => import('@/features/admin/AdminArtworksPage'));
@@ -26,6 +27,7 @@ const MediaPage = lazy(() => import('@/features/media-library/MediaPage'));
 const SiteSettingsPage = lazy(() => import('@/features/site-settings/SiteSettingsPage'));
 const AdminContentPage = lazy(() => import('@/features/admin/AdminContentPage'));
 const AdminPoliciesPage = lazy(() => import('@/features/admin/AdminPoliciesPage'));
+const AdminUsersPage = lazy(() => import('@/features/admin/AdminUsersPage'));
 
 function LazyFallback() {
   return <div style={{ textAlign: 'center', padding: '3rem 0', color: '#737373', fontSize: '0.875rem' }}>Cargando...</div>;
@@ -57,6 +59,10 @@ export const router = createBrowserRouter([
     element: <SuspenseWrap><LoginPage /></SuspenseWrap>,
   },
   {
+    path: '/admin/registro',
+    element: <SuspenseWrap><RegisterPage /></SuspenseWrap>,
+  },
+  {
     path: '/admin',
     element: <AdminProtectedRoute />,
     children: [
@@ -71,6 +77,7 @@ export const router = createBrowserRouter([
           { path: 'configuracion', element: <SuspenseWrap><SiteSettingsPage /></SuspenseWrap> },
           { path: 'contenido', element: <SuspenseWrap><AdminContentPage /></SuspenseWrap> },
           { path: 'politicas', element: <SuspenseWrap><AdminPoliciesPage /></SuspenseWrap> },
+          { path: 'usuarios', element: <SuspenseWrap><AdminUsersPage /></SuspenseWrap> },
         ],
       },
     ],

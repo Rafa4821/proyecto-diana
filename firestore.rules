@@ -123,9 +123,16 @@ service cloud.firestore {
     }
 
     // ─── adminUsers ─────────────────────────────────────────
-    // Only admin can read/write
+    // Authenticated users can create their own admin document (registration)
+    // Admins can read all, delete others
     match /adminUsers/{userId} {
-      allow read, write: if isAdmin();
+      allow read: if isAdmin();
+      allow create: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && request.resource.data.keys().hasAll(['email', 'displayName', 'role', 'createdAt'])
+                    && request.resource.data.role == 'admin';
+      allow update: if isAdmin();
+      allow delete: if isAdmin() && request.auth.uid != userId;
     }
 
     // ─── Deny everything else ───────────────────────────────

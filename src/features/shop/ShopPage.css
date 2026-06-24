@@ -14,7 +14,7 @@
 /* Product card */
 .product-card {
   background-color: var(--color-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--card-border-radius, var(--radius-md));
   overflow: hidden;
   transition: box-shadow var(--transition-base);
 }
@@ -33,7 +33,7 @@
 
 .product-card__image-wrapper {
   position: relative;
-  aspect-ratio: 4/5;
+  aspect-ratio: var(--card-ratio, 4/5);
   overflow: hidden;
   background-color: var(--color-gray-100);
 }

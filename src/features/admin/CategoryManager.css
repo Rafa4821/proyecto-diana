@@ -1,0 +1,128 @@
+.cat-manager {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.cat-manager__header {
+  margin-bottom: var(--space-lg);
+}
+
+.cat-manager__header h2 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-xs);
+}
+
+.cat-manager__hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.cat-manager__add {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.cat-manager__add .admin-field__input {
+  flex: 1;
+}
+
+.cat-manager__empty {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.cat-manager__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cat-manager__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50, #fafafa);
+  transition: box-shadow var(--transition-fast);
+}
+
+.cat-manager__item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.cat-manager__reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cat-manager__reorder-btn {
+  width: 24px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  transition: background-color var(--transition-fast);
+}
+
+.cat-manager__reorder-btn:hover:not(:disabled) {
+  background-color: var(--color-gray-100);
+  color: var(--color-text);
+}
+
+.cat-manager__reorder-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cat-manager__name {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.cat-manager__actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.cat-manager__edit-row {
+  flex: 1;
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.cat-manager__edit-row .admin-field__input {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .cat-manager {
+    padding: var(--space-md);
+  }
+
+  .cat-manager__item {
+    flex-wrap: wrap;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .cat-manager__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

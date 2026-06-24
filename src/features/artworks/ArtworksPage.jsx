@@ -29,7 +29,7 @@ export default function ArtworksPage() {
       setError(null);
       const [arts, cats] = await Promise.all([
         getPublishedArtworks(),
-        getCategories(),
+        getCategories('artwork'),
       ]);
       setArtworks(arts);
       setCategories(cats);
@@ -115,7 +115,7 @@ export default function ArtworksPage() {
                   <Card.Body>
                     <Card.Title>{work.title}</Card.Title>
                     <Card.Text>
-                      {[work.technique, work.year].filter(Boolean).join(' · ')}
+                      {[work.technique, work.dimensions, work.year].filter(Boolean).join(' · ')}
                     </Card.Text>
                   </Card.Body>
                 </Card>

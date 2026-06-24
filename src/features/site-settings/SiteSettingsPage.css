@@ -1,15 +1,20 @@
-/* Admin shared styles */
+/* ── Admin shared styles ── */
 .admin-page {
   max-width: 900px;
 }
 
-.admin-page__header {
+.site-settings__header {
   margin-bottom: var(--space-xl);
 }
 
-.admin-page__header h1 {
+.site-settings__header h1 {
   font-size: var(--text-2xl);
-  margin-bottom: 0;
+  margin-bottom: var(--space-xs);
+}
+
+.site-settings__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .admin-loading {
@@ -80,9 +85,15 @@
 
 .admin-form__section-title {
   font-size: var(--text-lg);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-xs);
   padding-bottom: var(--space-sm);
   border-bottom: 1px solid var(--color-border-light);
+}
+
+.admin-form__section-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
 }
 
 .admin-form__grid {
@@ -91,9 +102,16 @@
   gap: var(--space-lg);
 }
 
+.admin-form__grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 @media (min-width: 768px) {
   .admin-form__grid {
     grid-template-columns: 1fr 1fr;
+  }
+  .admin-form__grid--3 {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -111,6 +129,10 @@
   .admin-tabs__btn {
     white-space: nowrap;
     flex-shrink: 0;
+  }
+
+  .admin-form__grid--3 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -139,6 +161,13 @@
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text);
+
+}
+
+.admin-field__hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
 .admin-field__input,
@@ -201,6 +230,210 @@
   flex: 1;
 }
 
+/* Range slider */
+.admin-field__range-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.admin-field__range {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-gray-200);
+  border-radius: 3px;
+  outline: none;
+}
+
+.admin-field__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-text);
+  cursor: pointer;
+}
+
+.admin-field__range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-text);
+  cursor: pointer;
+  border: none;
+}
+
+.admin-field__range-value {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  min-width: 48px;
+  text-align: right;
+}
+
+/* ── Cards section ── */
+.settings-cards-section {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.settings-cards-section__title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-xs);
+}
+
+.settings-cards-section__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* Size options */
+.settings-size-options {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.settings-size-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.settings-size-option:hover {
+  border-color: var(--color-gray-400);
+}
+
+.settings-size-option--active {
+  border-color: var(--color-text);
+  background: var(--color-gray-50, #fafafa);
+}
+
+.settings-size-option__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.settings-size-option__value {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Ratio options */
+.settings-ratio-options {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.settings-ratio-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 80px;
+}
+
+.settings-ratio-option:hover {
+  border-color: var(--color-gray-400);
+}
+
+.settings-ratio-option--active {
+  border-color: var(--color-text);
+  background: var(--color-gray-50, #fafafa);
+}
+
+.settings-ratio-option__preview {
+  width: 36px;
+  background: var(--color-gray-200);
+  border-radius: 3px;
+}
+
+.settings-ratio-option__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.settings-ratio-option__desc {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+/* ── Live preview ── */
+.settings-preview {
+  background: var(--color-gray-50, #fafafa);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.settings-preview__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.settings-preview__grid {
+  display: grid;
+}
+
+.settings-preview__card {
+  background: var(--color-white);
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.settings-preview__card--hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.settings-preview__card-img {
+  background: linear-gradient(135deg, var(--color-gray-200), var(--color-gray-100));
+  width: 100%;
+}
+
+.settings-preview__card-body {
+  padding: 10px;
+}
+
+.settings-preview__card-title {
+  height: 10px;
+  width: 70%;
+  background: var(--color-gray-200);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.settings-preview__card-text {
+  height: 8px;
+  width: 45%;
+  background: var(--color-gray-100);
+  border-radius: 4px;
+}
+
 /* Buttons */
 .admin-btn {
   display: inline-flex;
@@ -228,4 +461,20 @@
 .admin-btn--primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ── Responsive for ratio options ── */
+@media (max-width: 767px) {
+  .settings-size-options {
+    flex-direction: column;
+  }
+
+  .settings-ratio-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .settings-preview__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }

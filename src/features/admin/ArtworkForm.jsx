@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { createArtwork, updateArtwork } from '@/features/artworks/artworksService';
 import { getCategories } from '@/features/artworks/categoriesService';
 import ImagePicker from '@/features/media-library/ImagePicker';
+import './ArtworkForm.css';
 
 const STATUSES = [
-  { value: 'draft', label: 'Borrador' },
-  { value: 'published', label: 'Publicada' },
-  { value: 'archived', label: 'Archivada' },
+  { value: 'draft', label: 'Borrador', desc: 'No visible en el sitio' },
+  { value: 'published', label: 'Publicada', desc: 'Visible en el portafolio' },
+  { value: 'archived', label: 'Archivada', desc: 'Oculta del portafolio' },
 ];
 
 const DEFAULT_ARTWORK = {
@@ -17,6 +18,8 @@ const DEFAULT_ARTWORK = {
   categoryId: '',
   year: new Date().getFullYear(),
   technique: '',
+  dimensions: '',
+  medium: '',
   featured: false,
   status: 'draft',
   sortOrder: 0,
@@ -38,6 +41,8 @@ export default function ArtworkForm({ artwork, onDone, onCancel }) {
   const [categories, setCategories] = useState([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [touched, setTouched] = useState({});
 
   useEffect(() => {
     loadCategories();
@@ -45,7 +50,7 @@ export default function ArtworkForm({ artwork, onDone, onCancel }) {
 
   async function loadCategories() {
     try {
-      const cats = await getCategories();
+      const cats = await getCategories('artwork');
       setCategories(cats);
     } catch (err) {
       console.error(err);
@@ -62,12 +67,24 @@ export default function ArtworkForm({ artwork, onDone, onCancel }) {
     });
   }
 
+  function touch(field) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }
+
+  function getFieldError(field) {
+    if (!touched[field]) return null;
+    if (field === 'title' && !formData.title.trim()) return 'El titulo es obligatorio';
+    return null;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
+    setTouched({ title: true });
     if (!formData.title.trim()) {
-      setError('El título es obligatorio.');
+      setError('Por favor completa los campos obligatorios.');
       return;
     }
 
@@ -79,109 +96,248 @@ export default function ArtworkForm({ artwork, onDone, onCancel }) {
 
       if (isEditing) {
         await updateArtwork(artwork.id, dataToSave);
+        setSuccess('Cambios guardados correctamente.');
+        setTimeout(() => setSuccess(null), 3000);
       } else {
         await createArtwork(dataToSave);
+        onDone();
       }
-      onDone();
     } catch (err) {
-      setError('Error al guardar la ilustración.');
+      setError('Error al guardar la ilustracion.');
       console.error(err);
     } finally {
       setSaving(false);
     }
   }
 
+  function handleSaveAndContinue() {
+    // triggers same submit
+  }
+
+  const currentStatus = STATUSES.find((s) => s.value === formData.status);
+
   return (
-    <div className="admin-page">
-      <div className="admin-page__header">
-        <h1>{isEditing ? 'Editar ilustración' : 'Nueva ilustración'}</h1>
-        <button type="button" className="admin-btn admin-btn--secondary" onClick={onCancel}>
-          ← Volver a la lista
+    <div className="admin-page artwork-form-page">
+      <div className="artwork-form-page__topbar">
+        <button type="button" className="artwork-form-page__back" onClick={onCancel}>
+          ← Volver
         </button>
+        <h1 className="artwork-form-page__title">
+          {isEditing ? 'Editar ilustracion' : 'Nueva ilustracion'}
+        </h1>
+        <div className="artwork-form-page__topbar-actions">
+          <button type="button" className="admin-btn admin-btn--secondary" onClick={onCancel}>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="admin-btn admin-btn--primary"
+            disabled={saving}
+            onClick={handleSubmit}
+          >
+            {saving ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear ilustracion')}
+          </button>
+        </div>
       </div>
 
       {error && <div className="admin-alert admin-alert--error">{error}</div>}
+      {success && <div className="admin-alert admin-alert--success">{success}</div>}
 
-      <form onSubmit={handleSubmit} className="admin-form">
-        <section className="admin-form__section">
-          <h2 className="admin-form__section-title">Información</h2>
-          <div className="admin-form__grid">
-            <div className="admin-field">
-              <label className="admin-field__label">Título</label>
-              <input className="admin-field__input" value={formData.title} onChange={(e) => update('title', e.target.value)} placeholder="Título de la ilustración" />
+      <form onSubmit={handleSubmit} className="artwork-form-page__layout">
+        <div className="artwork-form-page__main">
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Informacion general</h2>
+            <div className="artwork-form-card__fields">
+              <div className="admin-field admin-field--full">
+                <label className="admin-field__label">
+                  Titulo <span className="admin-field__required">*</span>
+                </label>
+                <input
+                  className={`admin-field__input ${getFieldError('title') ? 'admin-field__input--error' : ''}`}
+                  value={formData.title}
+                  onChange={(e) => update('title', e.target.value)}
+                  onBlur={() => touch('title')}
+                  placeholder="Titulo de la ilustracion"
+                />
+                {getFieldError('title') && (
+                  <span className="admin-field__error">{getFieldError('title')}</span>
+                )}
+              </div>
+              <div className="admin-field admin-field--full">
+                <label className="admin-field__label">Slug (URL)</label>
+                <input
+                  className="admin-field__input"
+                  value={formData.slug}
+                  onChange={(e) => update('slug', e.target.value)}
+                />
+                <span className="admin-field__hint">Se genera automaticamente desde el titulo</span>
+              </div>
+              <div className="admin-field admin-field--full">
+                <label className="admin-field__label">Descripcion</label>
+                <textarea
+                  className="admin-field__textarea"
+                  rows={4}
+                  value={formData.description}
+                  onChange={(e) => update('description', e.target.value)}
+                  placeholder="Describe la obra, su contexto, inspiracion..."
+                />
+                <span className="admin-field__hint">{formData.description.length} caracteres</span>
+              </div>
             </div>
-            <div className="admin-field">
-              <label className="admin-field__label">Slug</label>
-              <input className="admin-field__input" value={formData.slug} onChange={(e) => update('slug', e.target.value)} />
+          </section>
+
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Detalles de la obra</h2>
+            <div className="artwork-form-card__fields artwork-form-card__fields--grid">
+              <div className="admin-field">
+                <label className="admin-field__label">Tecnica</label>
+                <input
+                  className="admin-field__input"
+                  value={formData.technique}
+                  onChange={(e) => update('technique', e.target.value)}
+                  placeholder="Ej: Acuarela, Oleo, Tinta..."
+                />
+              </div>
+              <div className="admin-field">
+                <label className="admin-field__label">Soporte / Medio</label>
+                <input
+                  className="admin-field__input"
+                  value={formData.medium}
+                  onChange={(e) => update('medium', e.target.value)}
+                  placeholder="Ej: Papel, Lienzo, Digital..."
+                />
+              </div>
+              <div className="admin-field">
+                <label className="admin-field__label">Dimensiones</label>
+                <input
+                  className="admin-field__input"
+                  value={formData.dimensions}
+                  onChange={(e) => update('dimensions', e.target.value)}
+                  placeholder="Ej: 30 x 40 cm"
+                />
+              </div>
+              <div className="admin-field">
+                <label className="admin-field__label">Ano</label>
+                <input
+                  className="admin-field__input"
+                  type="number"
+                  value={formData.year}
+                  onChange={(e) => update('year', e.target.value)}
+                  min="1900"
+                  max="2099"
+                />
+              </div>
             </div>
-            <div className="admin-field admin-field--full">
-              <label className="admin-field__label">Descripción</label>
-              <textarea className="admin-field__textarea" rows={3} value={formData.description} onChange={(e) => update('description', e.target.value)} />
-            </div>
+          </section>
+
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Imagen</h2>
+            <p className="artwork-form-card__desc">
+              Selecciona una imagen desde la biblioteca de medios o sube una nueva directamente.
+            </p>
+            <ImagePicker
+              label="Imagen principal"
+              value={formData.imageUrl}
+              onChange={(v) => update('imageUrl', v)}
+            />
+          </section>
+        </div>
+
+        <div className="artwork-form-page__sidebar">
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Publicacion</h2>
+
             <div className="admin-field">
-              <label className="admin-field__label">Técnica</label>
-              <input className="admin-field__input" value={formData.technique} onChange={(e) => update('technique', e.target.value)} />
+              <label className="admin-field__label">Estado</label>
+              <div className="artwork-form__status-options">
+                {STATUSES.map((s) => (
+                  <label
+                    key={s.value}
+                    className={`artwork-form__status-option ${formData.status === s.value ? 'artwork-form__status-option--active' : ''}`}
+                  >
+                    <input
+                      type="radio"
+                      name="status"
+                      value={s.value}
+                      checked={formData.status === s.value}
+                      onChange={(e) => update('status', e.target.value)}
+                      className="visually-hidden"
+                    />
+                    <span className="artwork-form__status-label">{s.label}</span>
+                    <span className="artwork-form__status-desc">{s.desc}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+          </section>
+
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Organizacion</h2>
+
             <div className="admin-field">
-              <label className="admin-field__label">Año</label>
-              <input className="admin-field__input" type="number" value={formData.year} onChange={(e) => update('year', e.target.value)} />
-            </div>
-            <div className="admin-field">
-              <label className="admin-field__label">Categoría</label>
-              <select className="admin-field__select" value={formData.categoryId} onChange={(e) => update('categoryId', e.target.value)}>
-                <option value="">Sin categoría</option>
+              <label className="admin-field__label">Categoria</label>
+              <select
+                className="admin-field__select"
+                value={formData.categoryId}
+                onChange={(e) => update('categoryId', e.target.value)}
+              >
+                <option value="">Sin categoria</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.label || c.name}</option>
                 ))}
               </select>
             </div>
-            <div className="admin-field">
-              <label className="admin-field__label">Estado</label>
-              <select className="admin-field__select" value={formData.status} onChange={(e) => update('status', e.target.value)}>
-                {STATUSES.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="admin-field">
-              <label className="admin-field__label">Orden</label>
-              <input className="admin-field__input" type="number" value={formData.sortOrder} onChange={(e) => update('sortOrder', e.target.value)} />
-            </div>
-          </div>
-        </section>
 
-        <section className="admin-form__section">
-          <h2 className="admin-form__section-title">Imagen</h2>
-          <div className="admin-form__grid">
-            <ImagePicker label="Imagen de la ilustración" value={formData.imageUrl} onChange={(v) => update('imageUrl', v)} />
-          </div>
-        </section>
+            <div className="admin-field">
+              <label className="admin-field__label">Orden de visualizacion</label>
+              <input
+                className="admin-field__input"
+                type="number"
+                value={formData.sortOrder}
+                onChange={(e) => update('sortOrder', e.target.value)}
+              />
+              <span className="admin-field__hint">Menor numero = aparece primero</span>
+            </div>
+          </section>
 
-        <section className="admin-form__section">
-          <h2 className="admin-form__section-title">Visibilidad</h2>
-          <div className="admin-form__grid">
-            <div className="admin-field admin-field--checkbox">
-              <label className="admin-field__checkbox-label">
-                <input type="checkbox" checked={formData.featured} onChange={(e) => update('featured', e.target.checked)} />
-                <span>Destacada</span>
+          <section className="artwork-form-card">
+            <h2 className="artwork-form-card__title">Visibilidad</h2>
+
+            <div className="artwork-form__toggle-group">
+              <label className="artwork-form__toggle">
+                <div className="artwork-form__toggle-info">
+                  <span className="artwork-form__toggle-name">Destacada</span>
+                  <span className="artwork-form__toggle-desc">Aparece en secciones destacadas</span>
+                </div>
+                <div className={`artwork-form__switch ${formData.featured ? 'artwork-form__switch--on' : ''}`} onClick={() => update('featured', !formData.featured)}>
+                  <span className="artwork-form__switch-thumb" />
+                </div>
+              </label>
+
+              <label className="artwork-form__toggle">
+                <div className="artwork-form__toggle-info">
+                  <span className="artwork-form__toggle-name">Mostrar en Home</span>
+                  <span className="artwork-form__toggle-desc">Visible en la pagina principal</span>
+                </div>
+                <div className={`artwork-form__switch ${formData.showInHome ? 'artwork-form__switch--on' : ''}`} onClick={() => update('showInHome', !formData.showInHome)}>
+                  <span className="artwork-form__switch-thumb" />
+                </div>
               </label>
             </div>
-            <div className="admin-field admin-field--checkbox">
-              <label className="admin-field__checkbox-label">
-                <input type="checkbox" checked={formData.showInHome} onChange={(e) => update('showInHome', e.target.checked)} />
-                <span>Mostrar en Home</span>
-              </label>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <div className="admin-form__actions">
-          <button type="submit" className="admin-btn admin-btn--primary" disabled={saving}>
-            {saving ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear ilustración')}
-          </button>
-          <button type="button" className="admin-btn admin-btn--secondary" onClick={onCancel}>
-            Cancelar
-          </button>
+          <div className="artwork-form-page__sidebar-actions">
+            <button
+              type="submit"
+              className="admin-btn admin-btn--primary artwork-form-page__save-btn"
+              disabled={saving}
+            >
+              {saving ? 'Guardando...' : (isEditing ? 'Guardar cambios' : 'Crear ilustracion')}
+            </button>
+            <button type="button" className="admin-btn admin-btn--secondary artwork-form-page__cancel-btn" onClick={onCancel}>
+              Cancelar
+            </button>
+          </div>
         </div>
       </form>
     </div>

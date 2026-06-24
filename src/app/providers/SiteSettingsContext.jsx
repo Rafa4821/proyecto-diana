@@ -19,6 +19,9 @@ const FALLBACK = {
   colorSecondary: '#737373',
   cardSize: 'medium',
   cardRatio: '4/5',
+  cardGap: 16,
+  cardBorderRadius: 8,
+  cardHoverEffect: true,
   columnsDesktop: 4,
   columnsTablet: 3,
   columnsMobile: 1,
@@ -78,6 +81,8 @@ function applyThemeVars(s) {
   const cardMinMap = { small: '240px', medium: '280px', large: '340px' };
   root.style.setProperty('--card-min-width', cardMinMap[s.cardSize] || '280px');
   root.style.setProperty('--card-ratio', s.cardRatio || '4/5');
+  root.style.setProperty('--grid-gap', `${s.cardGap ?? 16}px`);
+  root.style.setProperty('--card-border-radius', `${s.cardBorderRadius ?? 8}px`);
   root.style.setProperty('--grid-columns-desktop', s.columnsDesktop || 4);
   root.style.setProperty('--grid-columns-tablet', s.columnsTablet || 2);
   root.style.setProperty('--grid-columns-mobile', s.columnsMobile || 1);
